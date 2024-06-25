@@ -1,9 +1,7 @@
-const requiredVersion = '1.0.2';
-
 const Nature = ['HARDY', 'LONELY', 'BRAVE', 'ADAMANT', 'NAUGHTY', 'BOLD', 'DOCILE', 'RELAXED', 'IMPISH', 'LAX', 'TIMID', 'HASTY', 'SERIOUS', 'JOLLY', 'NAIVE', 'MODEST', 'MILD', 'QUIET', 'BASHFUL', 'RASH', 'CALM', 'GENTLE', 'SASSY', 'CAREFUL', 'QUIRKY'];
 const Stat = ['HP', 'ATK', 'DEF', 'SPATK', 'SPDEF', 'SPD'];
 
-describePokemon = (pokemon) => {
+const describePokemon = (pokemon: PokeRogue.field.Pokemon) => {
     ImGui.Text(`Id: ${pokemon.id}`);
     ImGui.Text(`Shiny: ${pokemon.shiny}`);
     ImGui.Text(`Level: ${pokemon.level}`);
@@ -52,7 +50,7 @@ describePokemon = (pokemon) => {
 
         if (ImGui.TreeNode(`forms##${pokemon.id}`)) {
             pokemon.species.forms.forEach((form) => {
-                ImGui.Text(`${form.name}`);
+                ImGui.Text(`${form.formName}`);
             });
             ImGui.TreePop();
         }
@@ -78,20 +76,14 @@ describePokemon = (pokemon) => {
 addWindow(
     'Pokemon describer',
     () => {
-        if (compareVersions(currentVersion, requiredVersion) < 0) {
-            ImGui.Text('Outdated PokeRogueModLoader!');
-            ImGui.Text(`Update to ${requiredVersion}`);
-            ImGui.Text(`You are using ${currentVersion}`);
-            return;
-        }
-
         const battleScene = getBattleScene();
 
         if (!battleScene || typeof battleScene.getParty !== 'function') {
             ImGui.Text('Game is still loading');
+            return
         }
 
-        battleScene.getParty().forEach((pokemon, index) => {
+        battleScene.getParty().forEach((pokemon) => {
             ImGui.PushStyleColor(ImGui.ImGuiCol.Text, ImGui.IM_COL32(0, 255, 0, 255));
             if (ImGui.CollapsingHeader(`${pokemon.name}##${pokemon.id}`)) {
                 ImGui.PopStyleColor();
@@ -101,7 +93,7 @@ addWindow(
             }
         });
 
-        battleScene.getEnemyParty().forEach((pokemon, index) => {
+        battleScene.getEnemyParty().forEach((pokemon) => {
             ImGui.PushStyleColor(ImGui.ImGuiCol.Text, ImGui.IM_COL32(255, 0, 0, 255));
             if (ImGui.CollapsingHeader(`${pokemon.name}##${pokemon.id}`)) {
                 ImGui.PopStyleColor();
