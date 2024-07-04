@@ -1,6 +1,5 @@
-const Nature = ['HARDY', 'LONELY', 'BRAVE', 'ADAMANT', 'NAUGHTY', 'BOLD', 'DOCILE', 'RELAXED', 'IMPISH', 'LAX', 'TIMID', 'HASTY', 'SERIOUS', 'JOLLY', 'NAIVE', 'MODEST', 'MILD', 'QUIET', 'BASHFUL', 'RASH', 'CALM', 'GENTLE', 'SASSY', 'CAREFUL', 'QUIRKY'];
-const Stat = ['HP', 'ATK', 'DEF', 'SPATK', 'SPDEF', 'SPD'];
-
+const Stat = PokeRogue.data.Stat;
+const Nature = PokeRogue.data.Nature;
 const describePokemon = (pokemon: PokeRogue.field.Pokemon) => {
     ImGui.Text(`Id: ${pokemon.id}`);
     ImGui.Text(`Shiny: ${pokemon.shiny}`);
@@ -80,7 +79,37 @@ addWindow(
 
         if (!battleScene || typeof battleScene.getParty !== 'function') {
             ImGui.Text('Game is still loading');
-            return
+            return;
+        }
+        if (ImGui.CollapsingHeader('Pokemon hover info')) {
+            let pokemon = data.getData('examplePokemonHover', undefined, false);
+            if (pokemon === undefined) {
+                pokemon = battleScene.addEnemyPokemon(battleScene.randomSpecies(1, 1), 1, 0, false);
+                data.setData('examplePokemonHover', pokemon, false);
+            }
+
+            ImGui.Checkbox('Enabled', data.getAccess('PokemonHover', false, true));
+
+            ImGui.SameLine();
+            if (ImGui.Button('Reroll pokemon')) {
+                pokemon = battleScene.addEnemyPokemon(battleScene.randomSpecies(1, 1), 1, 0, false);
+                data.setData('examplePokemonHover', pokemon, false);
+            }
+
+            ImGui.Checkbox('Glue to cursor', data.getAccess('HoverWindowCursor', false, true));
+
+            ImGui.SliderFloat('Opacity', data.getAccess('HoverWindowAlpha', 1, true), 0, 1);
+
+            const changed = ImGui.ColorEdit3('Bg Color', data.getData('HoverWindowBackground', new ImGui.ImVec4(0, 0, 0, 1), true));
+            if (changed) {
+                data.savePersistentData();
+            }
+
+            const drawHoverWindow = data.getData('drawHoverWindow', undefined, false);
+
+            if (drawHoverWindow) {
+                drawHoverWindow('ExampleHover', pokemon, new ImGui.ImVec2(ImGui.GetWindowPos().x + ImGui.GetWindowWidth(), ImGui.GetWindowPos().y));
+            }
         }
 
         battleScene.getParty().forEach((pokemon) => {

@@ -1,5 +1,5 @@
-var Nature = ['HARDY', 'LONELY', 'BRAVE', 'ADAMANT', 'NAUGHTY', 'BOLD', 'DOCILE', 'RELAXED', 'IMPISH', 'LAX', 'TIMID', 'HASTY', 'SERIOUS', 'JOLLY', 'NAIVE', 'MODEST', 'MILD', 'QUIET', 'BASHFUL', 'RASH', 'CALM', 'GENTLE', 'SASSY', 'CAREFUL', 'QUIRKY'];
-var Stat = ['HP', 'ATK', 'DEF', 'SPATK', 'SPDEF', 'SPD'];
+var Stat = PokeRogue.data.Stat;
+var Nature = PokeRogue.data.Nature;
 var describePokemon = function (pokemon) {
     ImGui.Text("Id: ".concat(pokemon.id));
     ImGui.Text("Shiny: ".concat(pokemon.shiny));
@@ -69,6 +69,29 @@ addWindow('Pokemon describer', function () {
     if (!battleScene || typeof battleScene.getParty !== 'function') {
         ImGui.Text('Game is still loading');
         return;
+    }
+    if (ImGui.CollapsingHeader('Pokemon hover info')) {
+        var pokemon = data.getData('examplePokemonHover', undefined, false);
+        if (pokemon === undefined) {
+            pokemon = battleScene.addEnemyPokemon(battleScene.randomSpecies(1, 1), 1, 0, false);
+            data.setData('examplePokemonHover', pokemon, false);
+        }
+        ImGui.Checkbox('Enabled', data.getAccess('PokemonHover', false, true));
+        ImGui.SameLine();
+        if (ImGui.Button('Reroll pokemon')) {
+            pokemon = battleScene.addEnemyPokemon(battleScene.randomSpecies(1, 1), 1, 0, false);
+            data.setData('examplePokemonHover', pokemon, false);
+        }
+        ImGui.Checkbox('Glue to cursor', data.getAccess('HoverWindowCursor', false, true));
+        ImGui.SliderFloat('Opacity', data.getAccess('HoverWindowAlpha', 1, true), 0, 1);
+        var changed = ImGui.ColorEdit3('Bg Color', data.getData('HoverWindowBackground', new ImGui.ImVec4(0, 0, 0, 1), true));
+        if (changed) {
+            data.savePersistentData();
+        }
+        var drawHoverWindow = data.getData('drawHoverWindow', undefined, false);
+        if (drawHoverWindow) {
+            drawHoverWindow('ExampleHover', pokemon, new ImGui.ImVec2(ImGui.GetWindowPos().x + ImGui.GetWindowWidth(), ImGui.GetWindowPos().y));
+        }
     }
     battleScene.getParty().forEach(function (pokemon) {
         ImGui.PushStyleColor(ImGui.ImGuiCol.Text, ImGui.IM_COL32(0, 255, 0, 255));
