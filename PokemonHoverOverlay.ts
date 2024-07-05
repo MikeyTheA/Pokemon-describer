@@ -61,7 +61,8 @@ const drawHoverWindow = (windowname: string, pokemon: PokeRogue.field.Pokemon, p
             const nature = PokeRogue.data.Nature[pokemon.nature];
             ImGui.TextColored(textColorVec4, `${nature.charAt(0)}${nature.slice(1).toLowerCase()} ${PokeRogue.data.Gender[pokemon.gender].toLowerCase()}`);
 
-            if (pokemon.abilityIndex > 0) {
+            const speciesForm = !pokemon.fusionSpecies ? pokemon.getSpeciesForm() : pokemon.getFusionSpeciesForm();
+            if (speciesForm.abilityHidden && (pokemon.fusionSpecies ? pokemon.fusionAbilityIndex : pokemon.abilityIndex) === speciesForm.getAbilityCount() - 1) {
                 let hue = data.getData(`hue${pokemon.id}`, 0.0, false);
                 if (hue >= 0.99) {
                     hue = 0.0;
@@ -85,7 +86,7 @@ const drawHoverWindow = (windowname: string, pokemon: PokeRogue.field.Pokemon, p
                 ImGui.SameLine();
                 ImGui.Text('|');
                 ImGui.SameLine();
-                ImGui.TextColored(rgb, `Hidden ability ${PokeRogue.enums.Abilities[pokemon.abilityIndex === 1 ? pokemon.species.ability1 : pokemon.species.ability2]}`);
+                ImGui.TextColored(rgb, `Hidden ability ${PokeRogue.enums.Abilities[pokemon.species.abilityHidden]}`);
             }
 
             ImGui.TextColored(textColorVec4, 'stats:');
