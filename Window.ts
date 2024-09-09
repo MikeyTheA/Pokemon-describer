@@ -1,4 +1,4 @@
-const Stat = PokeRogue.data.Stat;
+const Stat = PokeRogue.enums.Stat;
 const Nature = PokeRogue.data.Nature;
 const describePokemon = (pokemon: PokeRogue.field.Pokemon) => {
     ImGui.Text(`Id: ${pokemon.id}`);
@@ -27,7 +27,7 @@ const describePokemon = (pokemon: PokeRogue.field.Pokemon) => {
 
     if (ImGui.TreeNode(`moveset##${pokemon.id}`)) {
         pokemon.getMoveset().forEach((move) => {
-            ImGui.Text(move.getMove().name);
+            ImGui.Text(move?.getMove().name);
         });
         ImGui.TreePop();
     }

@@ -92,22 +92,24 @@ const drawHoverWindow = (windowname: string, pokemon: PokeRogue.field.Pokemon, p
             ImGui.TextColored(textColorVec4, 'stats:');
             pokemon.stats.forEach((stat, index) => {
                 ImGui.SameLine();
-                ImGui.TextColored(textColorVec4, `${PokeRogue.data.Stat[index]} ${stat}`);
+                ImGui.TextColored(textColorVec4, `${PokeRogue.enums.Stat[index]} ${stat}`);
             });
 
             ImGui.TextColored(textColorVec4, 'ivs:');
             pokemon.ivs.forEach((iv, index) => {
                 ImGui.SameLine();
-                ImGui.TextColored(textColorVec4, `${PokeRogue.data.Stat[index]} ${iv}`);
+                ImGui.TextColored(textColorVec4, `${PokeRogue.enums.Stat[index]} ${iv}`);
             });
 
             ImGui.TextColored(textColorVec4, 'moves:');
             pokemon.moveset.forEach((move, index) => {
-                ImGui.SameLine();
-                ImGui.TextColored(textColorVec4, move.getName());
-                if (index + 1 !== pokemon.moveset.length) {
+                if (move) {
                     ImGui.SameLine();
-                    ImGui.TextColored(textColorVec4, '|');
+                    ImGui.TextColored(textColorVec4, move.getName());
+                    if (index + 1 !== pokemon.moveset.length) {
+                        ImGui.SameLine();
+                        ImGui.TextColored(textColorVec4, '|');
+                    }
                 }
             });
 

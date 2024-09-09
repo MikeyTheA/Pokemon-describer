@@ -75,20 +75,22 @@ var drawHoverWindow = function (windowname, pokemon, pos) {
             ImGui.TextColored(textColorVec4_1, 'stats:');
             pokemon.stats.forEach(function (stat, index) {
                 ImGui.SameLine();
-                ImGui.TextColored(textColorVec4_1, "".concat(PokeRogue.data.Stat[index], " ").concat(stat));
+                ImGui.TextColored(textColorVec4_1, "".concat(PokeRogue.enums.Stat[index], " ").concat(stat));
             });
             ImGui.TextColored(textColorVec4_1, 'ivs:');
             pokemon.ivs.forEach(function (iv, index) {
                 ImGui.SameLine();
-                ImGui.TextColored(textColorVec4_1, "".concat(PokeRogue.data.Stat[index], " ").concat(iv));
+                ImGui.TextColored(textColorVec4_1, "".concat(PokeRogue.enums.Stat[index], " ").concat(iv));
             });
             ImGui.TextColored(textColorVec4_1, 'moves:');
             pokemon.moveset.forEach(function (move, index) {
-                ImGui.SameLine();
-                ImGui.TextColored(textColorVec4_1, move.getName());
-                if (index + 1 !== pokemon.moveset.length) {
+                if (move) {
                     ImGui.SameLine();
-                    ImGui.TextColored(textColorVec4_1, '|');
+                    ImGui.TextColored(textColorVec4_1, move.getName());
+                    if (index + 1 !== pokemon.moveset.length) {
+                        ImGui.SameLine();
+                        ImGui.TextColored(textColorVec4_1, '|');
+                    }
                 }
             });
             var ability = pokemon.getAbility();

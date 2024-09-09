@@ -1,4 +1,4 @@
-var Stat = PokeRogue.data.Stat;
+var Stat = PokeRogue.enums.Stat;
 var Nature = PokeRogue.data.Nature;
 var describePokemon = function (pokemon) {
     ImGui.Text("Id: ".concat(pokemon.id));
@@ -25,7 +25,7 @@ var describePokemon = function (pokemon) {
     }
     if (ImGui.TreeNode("moveset##".concat(pokemon.id))) {
         pokemon.getMoveset().forEach(function (move) {
-            ImGui.Text(move.getMove().name);
+            ImGui.Text(move === null || move === void 0 ? void 0 : move.getMove().name);
         });
         ImGui.TreePop();
     }
